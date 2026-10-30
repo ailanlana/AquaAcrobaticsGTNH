@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.PlayerCapabilities;
@@ -517,6 +518,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Unique
     private void syncPosYWithBoundingBox() {
         if (this.worldObj == null || !this.worldObj.isRemote || this.isRiding()) {
+            return;
+        }
+
+        // Remote players use server interpolation; their yOffset is reset independently.
+        if ((Object) this instanceof EntityOtherPlayerMP) {
             return;
         }
 
